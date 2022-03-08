@@ -14,8 +14,6 @@ let props = defineProps<{
 }>()
 let emits = defineEmits(['update:collapse'])
 let toggleCollapse = () => {
-  console.log('a');
-  
   emits('update:collapse', !props.collapse)
 }
 </script>

@@ -1,0 +1,8 @@
+// 使用命名空间修改组件库内部样式
+// 为使用该样式元素的父元素添加
+.el-icon-container-wrapper-dialog-body-height {
+  .el-dialog__body {
+    height: 700px;
+    overflow: scroll;
+  }
+}
