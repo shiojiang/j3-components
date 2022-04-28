@@ -1,8 +1,37 @@
+// 技巧
 // 使用命名空间修改组件库内部样式
-// 为使用该样式元素的父元素添加
+// 1.浏览器中调试
+// 2.为使用该样式元素的父元素添加
+// 在App.vue中引入
+
+// 自定义弹窗高度加滚动条
 .el-icon-container-wrapper-dialog-body-height {
   .el-dialog__body {
-    height: 700px;
+    height: 70vh;
     overflow: scroll;
   }
+}
+
+// 自定义tabs宽度并居中
+.list-el-tabs-item-align-center {
+  .el-tabs__nav {
+    width: 100%;
+    display: flex;
+  }
+  .el-tabs__item {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+// 待优化：这个样式只能全局修改
+
+// 去掉弹出框padding
+.remove-list-el-tabs-popover-padding {
+  // .el-popover.el-popper {
+  //   padding: 0!important;
+  // }
+  // .el-popper {
+  //    padding: 0!important;
+  // }
 }

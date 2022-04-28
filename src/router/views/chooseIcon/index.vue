@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import j3ChooseIcon from '../../../components/chooseIcon/src/index.vue'
+// import j3ChooseIcon from '../../../components/chooseIcon/src/index.vue'
 import { ref } from 'vue'
 let visible = ref<boolean>(false)
 
