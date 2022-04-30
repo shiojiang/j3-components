@@ -39,19 +39,19 @@
 </template>
 
 <script setup lang="ts">
-import { propType, ref } from 'vue'
+import { PropType, ref } from 'vue'
 import { listOptions, actionOptions } from './types.ts'
 import { toLine } from '../../../utils/index.ts'
 
 let props = defineProps({
   // 列表数据
   list: {
-    type: Array as propType<ListOptions[]>,
+    type: Array as PropType<ListOptions[]>,
     required: true
   },
   // 操作数据
   action: {
-    type: Array as propType<actionOptions[]>,
+    type: Array as PropType<actionOptions[]>,
     default: () => []
   }
 })

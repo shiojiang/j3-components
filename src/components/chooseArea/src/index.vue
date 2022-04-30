@@ -35,7 +35,6 @@
         :value="item.code">
       </el-option>
     </el-select>
-    <button @click="handle">handle</button>
   </div>
 </template>
 
@@ -62,8 +61,6 @@ let selectCities = computed(() => {
 // 区域下拉框数据
 let selectAreas = computed(() => {
 })
-let handle = () => {
-}
 </script>
 
 <style lang="scss" scoped>

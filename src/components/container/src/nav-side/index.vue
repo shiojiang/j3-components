@@ -1,27 +1,10 @@
 <template>
-  <el-menu
-    default-active="1"
-    class="el-menu-vertical-demo"
+  <j3-menu class="el-menu-vertical-demo"
+    :data="menuData"
+    :default-active="$route.path"
+    router
     :collapse="collapse">
-    <el-menu-item index="1">
-      <!-- 不能使用类名图标？ -->
-      <!-- <i class="el-icon-menu"></i> -->
-      <el-icon><Location /></el-icon>
-      <span>首页</span>
-    </el-menu-item>
-    <el-menu-item index="2">
-      <el-icon><Document /></el-icon>
-      <span>图标选择器</span>
-    </el-menu-item>
-    <el-menu-item index="3">
-      <el-icon><Menu /></el-icon>
-      <span>趋势标记</span>
-    </el-menu-item>
-    <el-menu-item index="4">
-      <el-icon><Setting /></el-icon>
-      <span>导航四</span>
-    </el-menu-item>
-  </el-menu>
+  </j3-menu>
 </template>
 
 <script lang="ts" setup>
@@ -36,6 +19,64 @@ import { ref } from 'vue'
 let props = defineProps<{
   collapse: boolean,
 }>()
+
+let menuData = [
+  {
+    name: '首页',
+    index: '/',
+    icon: 'HomeFilled'
+  },
+  {
+    name: '图标选择器',
+    index: '/chooseIcon',
+    icon: 'Check'
+  },
+  {
+    name: '城市选择器',
+    index: '/chooseArea',
+    icon: 'TurnOff'
+  },
+  {
+    name: '趋势标记',
+    index: '/trend',
+    icon: 'Sort'
+  },
+  {
+    name: '通知菜单',
+    index: '/notification',
+    icon: 'Bell'
+  },
+  {
+    name: '导航菜单',
+    index: '/menu',
+    icon: 'Menu'
+  },
+  {
+    name: '时间选择器',
+    index: '/chooseTime',
+    icon: 'Timer'
+  },
+  {
+    name: '进度条',
+    index: '/progress',
+    icon: 'DArrowRight'
+  },
+  {
+    name: '日历',
+    index: '/calendar',
+    icon: 'ScaleToOriginal'
+  },
+  {
+    name: '表单',
+    index: '/form',
+    icon: 'Setting'
+  },
+  {
+    name: '表格',
+    index: '/table',
+    icon: 'shoppingBag'
+  },
+]
 
 </script>
 
