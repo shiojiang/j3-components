@@ -32,7 +32,6 @@ onMounted(() => {
     let time = Math.ceil(props.duration / props.percentage)
     let timer = setInterval(() => {
       currentPercentage.value += 1
-      // console.log(currentPercentage.value);
       if(currentPercentage.value >= props.percentage) {
         currentPercentage.value = props.percentage
         emits('onProgressStatus', currentPercentage.value)
@@ -40,7 +39,7 @@ onMounted(() => {
       }
     }, time)
   } else {
-    p.value = props.percentage
+    currentPercentage.value = props.percentage
   }
 })
 </script>

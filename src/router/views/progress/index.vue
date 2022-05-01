@@ -12,7 +12,6 @@ let currentPercentage = ref(0)
 let onProgressStatus = (val) => {
   currentPercentage.value = val
 }
-let cs = ref<Number>(30)
 let percentage1 = ref(100)
 </script>
 
