@@ -85,7 +85,7 @@ watch(() => startTime.value, val => {
   }
   else {
     disabledEndTime.value = false
-    emits('start-change', startTime.value)
+    emits('start-change', val)
   }
 })
 watch(() => endTime.value, val => {
