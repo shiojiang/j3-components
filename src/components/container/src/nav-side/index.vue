@@ -32,9 +32,14 @@ let menuData = [
     icon: 'Check'
   },
   {
-    name: '城市选择器',
+    name: '省市区选择',
     index: '/chooseArea',
-    icon: 'TurnOff'
+    icon: 'Position'
+  },
+  {
+    name: '城市选择器',
+    index: '/chooseCity',
+    icon: 'mapLocation'
   },
   {
     name: '趋势标记',

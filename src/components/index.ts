@@ -9,6 +9,7 @@ import menu from './menu'
 import progress from './progress'
 import chooseTime from './chooseTime'
 import chooseDate from './chooseDate'
+import chooseCity from './chooseCity'
 
 const components = [
   chooseIcon,
@@ -19,7 +20,8 @@ const components = [
   menu,
   progress,
   chooseTime,
-  chooseDate
+  chooseDate,
+  chooseCity
 ]
 
 // 技巧：
