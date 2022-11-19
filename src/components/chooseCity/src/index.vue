@@ -1,4 +1,5 @@
 <template>
+  <!-- 弹出层 -->
   <el-popover
     placement="bottom-start"
     title="城市选择器"
@@ -27,12 +28,17 @@
           </el-radio-group>
         </el-col>
         <el-col :span="14">
-          <el-select v-model="selectValue" filterable placeholder="Select">
+          <!-- 搜索下拉框 -->
+          <!-- filterable默认根据绑定的label进行过滤 -->
+          <!-- 现通过filter-method支持根据拼音进行过滤 -->
+          <el-select v-model="selectValue" filterable placeholder="选择或搜索城市"
+            :filter-method="filterMethod"
+            @change="changeSelectCity">
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             />
           </el-select>
         </el-col>
@@ -101,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import city from "../libs/city.ts";
 import province from "../libs/province.json"
 import { ICity, IProvince } from './types.ts'
@@ -114,32 +120,21 @@ const result = ref<string>("请选择");
 // 控制弹出层显示
 const visible = ref<boolean>(false);
 // 单选框的值
-const radioValue = ref<string>("按省份");
+const radioValue = ref<string>("按城市");
 // 下拉选项选中的值
 const selectValue = ref<string>("");
-// 下拉框数据
-const options = ref([
-  {
-    value: "Option1",
-    label: "Option1",
-  },
-  {
-    value: "Option2",
-    label: "Option2",
-  },
-  {
-    value: "Option3",
-    label: "Option3",
-  },
-  {
-    value: "Option4",
-    label: "Option4",
-  },
-  {
-    value: "Option5",
-    label: "Option5",
-  },
-]);
+// 下拉框数据(保存过滤前后数据)
+// ICity接口进行约束
+// 数据结构示例：
+// [{
+// 	"id": 56,
+// 	"spell": "aba",
+// 	"name": "阿坝"
+// }]
+const options = ref<ICity>([]);
+
+// 下拉框原始数据(所有城市)
+const optionsRawData = ref<ICity>([]);
 
 // 城市数据
 const cities = ref(city.cities);
@@ -158,6 +153,20 @@ const clickProvinceItem = (item: string) => {
   visible.value = false
   emits('changeProvince', item)
 }
+// 下拉选择处理
+const changeSelectCity = (id: number) => {
+  const city = optionsRawData.value.find(item => item.id === id)
+  result.value = city.name
+  // 感觉el-select选中之后会触发el-popover关闭，但是visible的值并未改变
+  visible.value = false
+  // console.log('visible的值:', visible.value);
+
+  if(radioValue.value === '按城市') {
+    emits('change', city)
+  } else {
+    emits('changeProvince', city.name)
+  }
+}
 
 // 点击字母处理
 // 不使用a标签的锚点链接，会改变地址栏的地址影响路由
@@ -166,6 +175,36 @@ const clickLetter = (letter: string) => {
   const el = document.getElementById(letter)
   if (el) el.scrollIntoView({ behavior: "smooth" })
 }
+
+onMounted(() => {
+  getCitySelectData()
+})
+
+// 获取城市下拉框数据
+const getCitySelectData = () => {
+  // 得到二维数组 使用flat扁平化为一维数组
+  const values = Object.values(cities.value).flat(2)
+  options.value = values
+  optionsRawData.value = values
+}
+
+// 自定义过滤方法
+const filterMethod = ((val: string) => {
+  // 下拉框原始数据
+  // 记录一下坑：要基于原始数据进行过滤(第一次写成基于options.value进行过滤导致删除内容的时候过滤无效)
+  const optionsRawData = Object.values(cities.value).flat(2)
+  if(!val) {
+    getCitySelectData()
+  } else {
+    if (radioValue.value === '按城市') {
+      // 支持中文/拼音过滤
+      options.value = optionsRawData.filter(item => item.name.includes(val) || item.spell.includes(val))
+    } else {
+      // 仅支持中文过滤
+      options.value = optionsRawData.filter(item => item.name.includes(val))
+    }
+  }
+})
 
 </script>
 

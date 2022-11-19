@@ -1,6 +1,9 @@
 <template>
   <div>
-    <j3-choose-city @change="changeCity" @change-province="changeProvince"></j3-choose-city>
+    <j3-choose-city
+      @change="changeCity"
+      @change-province="changeProvince"
+     />
   </div>
 </template>
 
