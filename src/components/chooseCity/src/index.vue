@@ -15,6 +15,7 @@
         </div>
       </div>
     </template>
+
     <!-- 显示内容 -->
     <div class="container">
       <!-- 城市选择 -->
@@ -36,31 +37,65 @@
           </el-select>
         </el-col>
       </el-row>
-      <div class="title">定位城市</div>
-      <!-- 城市首字母 -->
-      <div class="city">
-        <!-- cities数据为对象 -->
-        <!-- 方法一：遍历对象，参数依次为value, key -->
-        <!-- <div v-for="(value, key) in cities">{{key}}</div> -->
-        <!-- 方法二：对象转数组，从而遍历数组 -->
-        <div class="city-item" @click="clickLetter(item)" v-for="(item, index) in Object.keys(cities)" :key="index">
-          {{ item }}
+
+      <!-- 按城市 -->
+      <template v-if="radioValue==='按城市'">
+        <div class="title">城市首字母</div>
+        <div class="city">
+          <!-- cities数据为对象 -->
+          <!-- 方法一：遍历对象，参数依次为value, key -->
+          <!-- <div v-for="(value, key) in cities">{{key}}</div> -->
+          <!-- 方法二：对象转数组，从而遍历数组 -->
+
+          <!-- 城市首字母 -->
+          <div class="city-item" @click="clickLetter(item)" v-for="(item, index) in Object.keys(cities)" :key="index">
+            {{ item }}
+          </div>
         </div>
-      </div>
-      <!-- 滚动区 -->
-      <el-scrollbar max-height="400px">
-        <template v-for="(value, key) in cities" :key="key">
-          <!-- 为字母对应城市绑定id -->
-          <el-row class="city-name-wrapper" :id="key">
-            <el-col :span="2">{{ key }}:</el-col>
-            <el-col :span="22" class="city-name">
-              <div @click="clickItem(item)" class="city-name-item" v-for="item in value" :key="item.id">
-                {{ item.name }}
-              </div>
-            </el-col>
-          </el-row>
-        </template>
-      </el-scrollbar>
+        <!-- 城市滚动区 -->
+        <el-scrollbar max-height="400px">
+          <template v-for="(value, key) in cities" :key="key">
+            <!-- 为字母对应城市绑定id -->
+            <el-row class="city-name-wrapper" :id="key">
+              <el-col :span="2">{{ key }}:</el-col>
+              <el-col :span="22" class="city-name">
+                <div @click="clickItem(item)" class="city-name-item" v-for="item in value" :key="item.id">
+                  {{ item.name }}
+                </div>
+              </el-col>
+            </el-row>
+          </template>
+        </el-scrollbar>
+      </template>
+
+      <!-- 按省份 -->
+      <template v-else>
+        <div class="title">省份首字母</div>
+        <div class="province">
+          <!-- 省份首字母 -->
+          <div class="province-item" @click="clickLetter(item)"  v-for="(item, index) in Object.keys(provinces)" :key="index">
+            {{item}}
+          </div>
+          <!-- 省份滚动区 -->
+          <el-scrollbar max-height="400px">
+            <!-- 返回二维数组进行处理 -->
+            <template v-for="(item, index) in Object.values(provinces)" :key="index">
+              <template v-for="(item1, index1) in item" :key="index1">
+                <!-- 为字母对应省份绑定id -->
+                <el-row class="province-name-wrapper" :id="item1.id">
+                  <el-col :span="3">{{ item1.name }}:</el-col>
+                  <el-col :span="21" class="province-name">
+                    <div @click="clickProvinceItem(item2)" class="province-name-item"  v-for="(item2, index2) in item1.data" :key="index2">
+                      {{ item2 }}
+                    </div>
+                  </el-col>
+                </el-row>
+              </template>
+            </template>
+          </el-scrollbar>
+        </div>
+      </template>
+
     </div>
   </el-popover>
 </template>
@@ -68,17 +103,18 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import city from "../libs/city.ts";
-import { ICity } from './types.ts'
+import province from "../libs/province.json"
+import { ICity, IProvince } from './types.ts'
 
 // 分发事件
-const emits = defineEmits(['change'])
+const emits = defineEmits(['change', 'changeProvince'])
 
 // 存放选择结果
 const result = ref<string>("请选择");
 // 控制弹出层显示
 const visible = ref<boolean>(false);
 // 单选框的值
-const radioValue = ref<string>("按城市");
+const radioValue = ref<string>("按省份");
 // 下拉选项选中的值
 const selectValue = ref<string>("");
 // 下拉框数据
@@ -107,12 +143,22 @@ const options = ref([
 
 // 城市数据
 const cities = ref(city.cities);
+// 省份数据
+const provinces = ref(province);
+
 // 点击城市处理
 const clickItem = (item: ICity) => {
   result.value = item.name
   visible.value = false
   emits('change', item)
 }
+// 点击省份处理
+const clickProvinceItem = (item: string) => {
+  result.value = item
+  visible.value = false
+  emits('changeProvince', item)
+}
+
 // 点击字母处理
 // 不使用a标签的锚点链接，会改变地址栏的地址影响路由
 // 避坑：根据绑定id获取DOM，使用原生方法进行跳转
@@ -145,15 +191,15 @@ const clickLetter = (letter: string) => {
     margin-top: 10px;
     font-size: 16px;
   }
-  .city {
+  .city, .province {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     margin-top: 10px;
-    &-item {
-      width: 30px;
-      height: 30px;
-      // padding: 4px 8px;
+    .city-item, .province-item {
+      // width: 30px;
+      // height: 30px;
+      padding: 4px 10px;
       margin: 0 10px 10px 0;
       border: 1px solid #eee;
       display: flex;
@@ -165,9 +211,9 @@ const clickLetter = (letter: string) => {
       }
     }
   }
-  .city-name-wrapper {
+  .city-name-wrapper, .province-name-wrapper {
     margin-bottom: 10px;
-    .city-name {
+    .city-name, .province-name {
       display: flex;
       align-items: center;
       flex-wrap: wrap;

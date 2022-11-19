@@ -1,11 +1,14 @@
 <template>
   <div>
-    <j3-choose-city @change="changeCity"></j3-choose-city>
+    <j3-choose-city @change="changeCity" @change-province="changeProvince"></j3-choose-city>
   </div>
 </template>
 
 <script lang="ts" setup>
 let changeCity = val => {
+  console.log(val)
+}
+let changeProvince = val => {
   console.log(val)
 }
 </script>
